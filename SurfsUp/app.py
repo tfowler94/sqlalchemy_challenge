@@ -36,7 +36,7 @@ app = Flask(__name__)
 # Flask Routes
 #################################################
 # Starting Date (12 months ago)
-start_date = '2016-08-23'
+initial_date = '2016-08-23'
 
 @app.route("/")
 def welcome():
@@ -54,7 +54,7 @@ def welcome():
 @app.route("/api/v1.0/precipitation")
 def precipitation():
 
-    precip_result = session.query(measurement.date, func.avg(measurement.prcp)).filter(measurement.date >= start_date).group_by(measurement.date).all()
+    precip_result = session.query(measurement.date, func.avg(measurement.prcp)).filter(measurement.date >= initial_date).group_by(measurement.date).all()
     
 
     precip_keys = []
@@ -89,7 +89,7 @@ def stations():
 @app.route("/api/v1.0/tobs")
 def tobs():
 
-    tobs_results = session.query(measurement.date, measurement.station, measurement.tobs).filter(measurement.date >= start_date).filter(measurement.station == 'USC00519281').all()
+    tobs_results = session.query(measurement.date, measurement.station, measurement.tobs).filter(measurement.date >= initial_date).filter(measurement.station == 'USC00519281').all()
     
 
     tobs_list = []
@@ -116,9 +116,9 @@ def data_from_start_date(selected_start_date):
 
 # /api/v1.0/<start>/<end>
 @app.route("/api/v1.0/<start>/<end>")
-def data_from_date_range(start_date,end_date):
+def data_from_date_range(initial_date,end_date):
 
-    multi_date_temp_results = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).filter(measurement.date >= start_date).filter(measurement.date <= end_date).all()
+    multi_date_temp_results = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).filter(measurement.date >= initial_date).filter(measurement.date <= end_date).all()
     
 
     temperature_list = []
